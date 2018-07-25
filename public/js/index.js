@@ -1,5 +1,6 @@
 var socket = io(); //essential to emit and listen
 
+
 socket.on('connect', function () {
     console.log("Connected to server") //client prints when user connected
 })
@@ -7,7 +8,6 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     console.log("Disconnected from server") //client prints when disconnected
 })
-
 
 socket.on('newMessage', function (message) { //server.js should have emit function from same name with data that needs to be passed here
     console.log(message) //data passed from server.js(emit) is saved here as object
@@ -20,14 +20,23 @@ socket.on('newMessage', function (message) { //server.js should have emit functi
     $("#displayMessage").append(li)
 })
 
+socket.on('newLocationMessage', function (message) { //server.js should have emit function from same name with data that needs to be passed here
+    console.log(message)
+    var li = $('<li></li>')
+    var a = $('<a target="_blank"> My current location </a>')
+    li.text(`${message.from} `)
+    a.attr('href', message.url)
+    li.append(a)
+    $("#displayMessage").append(li)
+})
+
+
 
 socket.on('newUserJoined', function (message) { //server.js should have emit function from same name with data that needs to be passed here
     var li = $('<li></li>')
     li.text(`${message.from}: ${message.text}`)
     $("#displayMessage").append(li)
 })
-
-
 
 $("#message-form").on('submit', function (e) {
     e.preventDefault();
@@ -40,29 +49,16 @@ $("#message-form").on('submit', function (e) {
     })
 })
 
-var locationButton = $("#sendLocation");
+var locationButton = $("#send-location");
 locationButton.on('click', function () {
-    if (!navigator.geolocation) {
-        return alert('Geolocation not supported by your browser')
-    }
-
-
-
-    navigator.geolocation.getCurrentPosition(function (location) {
-
-            socket.emit('createLocationMessage', {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-            })
-        },
-        function errorCallback(error) {
-            alert("ERROR")
-        }, {
-            maximumAge: Infinity,
-            timeout: 5000
-        }
-    );
-
+    $.get("https://ipinfo.io", function (response) {
+        console.log(response.ip, response.country);
+        console.log(response.loc)
+        socket.emit('createLocationMessage', {
+            location: response.loc
+        })
+        console.log(response.log)
+    }, "jsonp")
 
 })
 
