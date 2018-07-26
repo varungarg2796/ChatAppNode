@@ -14,17 +14,20 @@ socket.on('newMessage', function (message) { //server.js should have emit functi
     console.log(message.from)
     console.log(message.text)
     console.log(message.createdAt)
-
+    var formattedTime = moment(message.createdAt).format('h:mm a');
+    console.log(formattedTime)
     var li = $('<li></li>')
-    li.text(`${message.from}: ${message.text}`)
+    li.text(`${message.from}: ${formattedTime} ${message.text}`)
     $("#displayMessage").append(li)
 })
 
 socket.on('newLocationMessage', function (message) { //server.js should have emit function from same name with data that needs to be passed here
     console.log(message)
+    var formattedTime = moment(message.createdAt).format('h:mm a');
+
     var li = $('<li></li>')
     var a = $('<a target="_blank"> My current location </a>')
-    li.text(`${message.from} `)
+    li.text(`${message.from} ${formattedTime} `)
     a.attr('href', message.url)
     li.append(a)
     $("#displayMessage").append(li)
