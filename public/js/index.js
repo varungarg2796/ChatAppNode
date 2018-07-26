@@ -26,7 +26,7 @@ socket.on('newLocationMessage', function (message) { //server.js should have emi
     var formattedTime = moment(message.createdAt).format('h:mm a');
 
     var li = $('<li></li>')
-    var a = $('<a target="_blank"> My current location </a>')
+    var a = $('<a target="_blank"> My curreçnt location </a>')
     li.text(`${message.from} ${formattedTime} `)
     a.attr('href', message.url)
     li.append(a)
