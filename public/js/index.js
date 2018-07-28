@@ -10,27 +10,46 @@ socket.on('disconnect', function () {
 })
 
 socket.on('newMessage', function (message) { //server.js should have emit function from same name with data that needs to be passed here
-    console.log(message) //data passed from server.js(emit) is saved here as object
-    console.log(message.from)
-    console.log(message.text)
-    console.log(message.createdAt)
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    console.log(formattedTime)
-    var li = $('<li></li>')
-    li.text(`${message.from}: ${formattedTime} ${message.text}`)
-    $("#displayMessage").append(li)
+    var template = $("#message-template").html()
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createdAt: formattedTime
+    })
+
+   $("#displayMessage").append(html)
+   
+    // console.log(message) //data passed from server.js(emit) is saved here as object
+    // console.log(message.from)
+    // console.log(message.text)
+    // console.log(message.createdAt)
+    // var formattedTime = moment(message.createdAt).format('h:mm a');
+    // console.log(formattedTime)
+    // var li = $('<li></li>')
+    // li.text(`${message.from}: ${formattedTime} ${message.text}`)
+    // $("#displayMessage").append(li)
 })
 
 socket.on('newLocationMessage', function (message) { //server.js should have emit function from same name with data that needs to be passed here
     console.log(message)
     var formattedTime = moment(message.createdAt).format('h:mm a');
+    var template = $("#location-message-template").html()
+    var html = Mustache.render(template, {
+        url: message.url,
+        from: message.from,
+        createdAt: formattedTime
+    })
 
-    var li = $('<li></li>')
-    var a = $('<a target="_blank"> My curreçnt location </a>')
-    li.text(`${message.from} ${formattedTime} `)
-    a.attr('href', message.url)
-    li.append(a)
-    $("#displayMessage").append(li)
+   $("#displayMessage").append(html)
+
+
+    // var li = $('<li></li>')
+    // var a = $('<a target="_blank"> My curreçnt location </a>')
+    // li.text(`${message.from} ${formattedTime} `)
+    // a.attr('href', message.url)
+    // li.append(a)
+    // $("#displayMessage").append(li)
 })
 
 
