@@ -1,5 +1,36 @@
 var socket = io(); //essential to emit and listen
 
+// function scrollToBottom(){
+//     //selectors
+//     var messages = $("#messages")
+//     var newMessage = messages.children('li:last-child')
+//     //heights
+//     var clientHeight = messages.prop('clientHeight');
+//     var scrollTop = messages.prop('scrollTop')
+//     var scrollHeight = messages.prop('scrollHeight')
+//     var newMessageHeight = newMessage.innerHeight()
+//     var lastMessageHeight = newMessage.prev().innerHeight()
+
+//     if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight){
+//         console.log("Should scroll")
+//     }
+// }
+
+function scrollToBottom () {
+    // Selectors
+    var messages = jQuery('#displayMessage');
+    var newMessage = messages.children('li:last-child')
+    // Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+  
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+      messages.scrollTop(scrollHeight);
+    }
+  }
 
 socket.on('connect', function () {
     console.log("Connected to server") //client prints when user connected
@@ -19,6 +50,8 @@ socket.on('newMessage', function (message) { //server.js should have emit functi
     })
 
    $("#displayMessage").append(html)
+
+   scrollToBottom();
    
     // console.log(message) //data passed from server.js(emit) is saved here as object
     // console.log(message.from)
@@ -43,6 +76,7 @@ socket.on('newLocationMessage', function (message) { //server.js should have emi
 
    $("#displayMessage").append(html)
 
+   scrollToBottom();
 
     // var li = $('<li></li>')
     // var a = $('<a target="_blank"> My curreçnt location </a>')
